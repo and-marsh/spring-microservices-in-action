@@ -2,13 +2,18 @@ spring:
   application:
     name: config-server
   profiles:
-    active: native
+    # Uses latest as default
+    active: native, git
   cloud:
     config:
       server:
-        #Local configuration: This locations can either of classpath or locations in the filesystem.
+        # Local configuration: This locations can either of classpath or locations in the filesystem.
         native:
-          #Reads from a src/main/resources/config
+          # Reads from a src/main/resources/config
           search-locations: classpath:/config
+        git:
+          # Just as an example, this points to the same config files as native but on GitHUB, use different repo for real projects
+          uri: https://github.com/and-marsh/spring-microservices-in-action.git
+          search-paths: config-server/src/main/resources/config
 server:
   port: 8071
