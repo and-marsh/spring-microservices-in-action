@@ -3,7 +3,7 @@ spring:
     name: config-server
   profiles:
     # Uses latest as default
-    active: git, vault, native
+    active: native
   cloud:
     config:
       server:
