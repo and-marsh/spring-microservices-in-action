@@ -20,8 +20,10 @@ spring:
           host: vault-server
           scheme: http
           authentication: token
-          # This should be encrypted or stored somewhere else
-          token: hvs.kD1OVBtKs4J2WnK1JFD3uf2d
+          token: '{cipher}6abb90fa7272541341e007dbd2970ca4c91bae1688dc4d161e237ec6291dde27434900cb42e9f98602e615e05bf35b85'
           kvVersion: 2
 server:
   port: 8071
+encrypt:
+  # Don't use this in production! This should be supplied as ENCRYPT_KEY env variable
+  key: z0=bwYgboe_Rp*[
