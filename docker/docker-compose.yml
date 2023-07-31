@@ -1,6 +1,21 @@
 version: '3.7'
 
 services:
+  vault:
+    image: hashicorp/vault
+    ports:
+      - "8200:8200"
+    volumes:
+      - ./vault/data:/vault/data:rw
+      - ./vault/config:/vault/config:rw
+    cap_add:
+      - IPC_LOCK
+    entrypoint: vault server -config=/vault/config/config.hcl
+    networks:
+      backend:
+        aliases:
+          - "vault-server"
+
   database:
     image: postgres:latest
     ports:
@@ -24,6 +39,9 @@ services:
   config-server:
     image: andmarsh/config-server:0.0.1-SNAPSHOT
     build: ./config-server
+    depends_on:
+      vault:
+        condition: service_started
     ports:
       - "8071:8071"
     networks:

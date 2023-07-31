@@ -3,7 +3,7 @@ spring:
     name: config-server
   profiles:
     # Uses latest as default
-    active: native, git
+    active: git, vault, native
   cloud:
     config:
       server:
@@ -15,5 +15,13 @@ spring:
           # Just as an example, this points to the same config files as native but on GitHUB, use different repo for real projects
           uri: https://github.com/and-marsh/spring-microservices-in-action.git
           search-paths: config-server/src/main/resources/config
+        vault:
+          port: 8200
+          host: vault-server
+          scheme: http
+          authentication: token
+          # This should be encrypted or stored somewhere else
+          token: hvs.kD1OVBtKs4J2WnK1JFD3uf2d
+          kvVersion: 2
 server:
   port: 8071
