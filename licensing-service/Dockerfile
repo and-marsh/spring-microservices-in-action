@@ -1,31 +1,31 @@
-#stage 1
-#Start with a base image containing Java runtime
-FROM openjdk:17-slim as build
+# Stage 1: building
+FROM openjdk:17-slim AS build
 
-# Add Maintainer Info
 LABEL maintainer="Andrei Marshalov <and.marsh61@gmail.com>"
 
-# The application's jar file
-ARG JAR_FILE="./build/libs/licensing-service-0.0.1-SNAPSHOT.jar"
+WORKDIR /usr/app/
 
-# Add the application's jar to the container
-COPY ${JAR_FILE} app.jar
+COPY *.gradle *.gradle.kts gradlew ./
+COPY gradle gradle
+RUN ./gradlew --version
 
-#unpackage jar file
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf /app.jar)
+COPY src src
+RUN ./gradlew clean bootJar
 
-#stage 2
-#Same Java runtime
+# Unpackage jar file
+RUN mkdir -p build/dependency && (cd build/dependency; jar -xf ../libs/*-SNAPSHOT.jar)
+
+# Stage 2: running
 FROM openjdk:17-slim
 
-#Add volume pointing to /tmp
+# Add volume pointing to /tmp because that is where a Spring Boot application creates working directories for Tomcat by default.
 VOLUME /tmp
 
-#Copy unpackaged application to new container
-ARG DEPENDENCY=/target/dependency
+# Copy unpackaged application to new container
+ARG DEPENDENCY=/usr/app/build/dependency
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
 COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
 COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
 
-#execute the application
+# Execute the application
 ENTRYPOINT ["java","-cp","app:app/lib/*","com.optimagrowth.license.LicensingServiceApplicationKt"]
