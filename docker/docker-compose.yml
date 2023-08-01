@@ -51,7 +51,7 @@ services:
           - "config-server"
 
   eureka-server:
-    image: ostock/eureka-server:0.0.1-SNAPSHOT
+    image: andmarsh/eureka-server:0.0.1-SNAPSHOT
     build: ./eureka-server
     ports:
       - "8070:8070"
@@ -79,6 +79,21 @@ services:
       backend:
         aliases:
           - "licensing-server"
+
+  organization-service:
+    image: andmarsh/organization-service:0.0.1-SNAPSHOT
+    build: ./organization-service
+    depends_on:
+      database:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+    ports:
+      - "8081:8081"
+    networks:
+      backend:
+        aliases:
+          - "organization-service"
 
 networks:
   backend:
