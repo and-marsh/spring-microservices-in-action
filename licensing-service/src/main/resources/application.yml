@@ -5,11 +5,3 @@ spring:
     active: dev
   config:
     import: configserver:http://config-server:8071
-
-management:
-  endpoints:
-    enabled-by-default: true
-
-  endpoint:
-    env:
-      show-values: ALWAYS
