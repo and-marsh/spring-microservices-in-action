@@ -36,6 +36,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
   config-server:
     image: andmarsh/config-server:0.0.1-SNAPSHOT
     build: ./config-server
@@ -48,6 +49,22 @@ services:
       backend:
         aliases:
           - "config-server"
+
+  eureka-server:
+    image: ostock/eureka-server:0.0.1-SNAPSHOT
+    build: ./eureka-server
+    ports:
+      - "8070:8070"
+    depends_on:
+      database:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "eureka-server"
+
   licensing-service:
     image: andmarsh/licensing-service:0.0.1-SNAPSHOT
     build: ./licensing-service
