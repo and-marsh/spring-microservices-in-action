@@ -26,19 +26,12 @@ class LicenseController(@field:Autowired private val licenseService: LicenseServ
     ): ResponseEntity<License> {
         val license = licenseService.getLicense(licenseId, organizationId)
         license.add(
-            linkTo(
-                methodOn(LicenseController::class.java).getLicense(organizationId, licenseId)
-            ).withSelfRel(),
-            linkTo(
-                methodOn(LicenseController::class.java).createLicense(license)
-            ).withRel("createLicense"),
-            linkTo(
-                methodOn(LicenseController::class.java).updateLicense(license)
-            ).withRel("updateLicense"),
-            linkTo(
-                methodOn(LicenseController::class.java).deleteLicense(licenseId)
-            ).withRel("deleteLicense")
+            linkTo(methodOn(LicenseController::class.java).getLicense(organizationId, licenseId)).withSelfRel(),
+            linkTo(methodOn(LicenseController::class.java).createLicense(license)).withRel("createLicense"),
+            linkTo(methodOn(LicenseController::class.java).updateLicense(license)).withRel("updateLicense"),
+            linkTo(methodOn(LicenseController::class.java).deleteLicense(licenseId)).withRel("deleteLicense")
         )
+
         return ResponseEntity.ok(license)
     }
 
