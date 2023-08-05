@@ -2,7 +2,9 @@ package com.optimagrowth.license.service
 
 import com.optimagrowth.license.config.ServiceConfig
 import com.optimagrowth.license.model.License
+import com.optimagrowth.license.model.Organization
 import com.optimagrowth.license.repository.LicenseRepository
+import com.optimagrowth.license.service.client.OrganizationFeignClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
@@ -13,10 +15,11 @@ import java.util.UUID
 class LicenseService(
     @field:Autowired val messages: MessageSource,
     @field:Autowired val licenseRepository: LicenseRepository,
+    @field:Autowired val organizationFeignClient: OrganizationFeignClient,
     @field:Autowired val config: ServiceConfig
 ) {
 
-    fun getLicense(licenseId: String, organizationId: String): License {
+    fun getLicense(licenseId: String, organizationId: String, clientType: String? = null): License {
         val license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId)
             ?: throw IllegalArgumentException(
                 messages.getMessage(
@@ -26,7 +29,15 @@ class LicenseService(
                 )
             )
 
-        return license.copy(comment = config.property)
+        val organization = clientType?.let { retrieveOrganizationInfo(organizationId, clientType) }
+
+        return license.copy(
+            comment = config.property,
+            organizationName = organization?.name,
+            contactName = organization?.contactName,
+            contactPhone = organization?.contactPhone,
+            contactEmail = organization?.contactEmail
+        )
     }
 
     fun createLicense(license: License): License {
@@ -47,6 +58,16 @@ class LicenseService(
 
         return messages.getMessage("license.delete.message", arrayOf(licenseId), DEFAULT_LOCALE)
     }
+
+    private fun retrieveOrganizationInfo(organizationId: String, clientType: String): Organization? =
+        when (clientType) {
+            "feign" -> {
+                println("I am using the feign client")
+                organizationFeignClient.getOrganization(organizationId)
+            }
+
+            else -> null
+        }
 
     companion object {
 

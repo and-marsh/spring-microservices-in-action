@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod.GET
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -40,6 +41,14 @@ class LicenseController(@field:Autowired private val licenseService: LicenseServ
         )
         return ResponseEntity.ok(license)
     }
+
+    @RequestMapping(value = ["/{licenseId}/{clientType}"], method = [GET])
+    fun getLicensesWithClient(
+        @PathVariable("organizationId") organizationId: String,
+        @PathVariable("licenseId") licenseId: String,
+        @PathVariable("clientType") clientType: String
+    ): ResponseEntity<License> =
+        ResponseEntity.ok(licenseService.getLicense(licenseId, organizationId, clientType))
 
     @PutMapping
     fun updateLicense(@RequestBody request: License): ResponseEntity<License> =

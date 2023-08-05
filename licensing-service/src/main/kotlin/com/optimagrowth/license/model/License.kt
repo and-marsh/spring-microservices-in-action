@@ -16,4 +16,8 @@ data class License(
     @Column(name = "license_type", nullable = false) val licenseType: String? = null,
     @Column(name = "description") val description: String? = null,
     @Column(name = "comment") val comment: String? = null,
+    @Transient val organizationName: String? = null,
+    @Transient val contactName: String? = null,
+    @Transient val contactPhone: String? = null,
+    @Transient val contactEmail: String? = null
 ) : RepresentationModel<License>()
