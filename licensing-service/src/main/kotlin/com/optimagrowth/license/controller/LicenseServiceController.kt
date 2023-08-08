@@ -54,4 +54,8 @@ class LicenseController(@field:Autowired private val licenseService: LicenseServ
     @DeleteMapping(value = ["/{licenseId}"])
     fun deleteLicense(@PathVariable("licenseId") licenseId: String): ResponseEntity<String> =
         ResponseEntity.ok(licenseService.deleteLicense(licenseId))
+
+    @GetMapping(value = ["/"])
+    fun getLicenses(@PathVariable("organizationId") organizationId: String): ResponseEntity<List<License>> =
+        ResponseEntity.ok(licenseService.getLicensesByOrganization(organizationId))
 }
