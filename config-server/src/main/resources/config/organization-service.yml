@@ -1,0 +1,32 @@
+eureka:
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://eureka-server:8070/eureka/
+  instance:
+    preferIpAddress: true
+example:
+  property: I AM THE DEFAULT
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: '*'
+spring:
+  database:
+    driverClassName: org.postgresql.Driver
+  datasource:
+    platform: postgres
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: none
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true

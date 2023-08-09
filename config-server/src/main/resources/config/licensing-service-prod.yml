@@ -1,0 +1,7 @@
+example:
+  property: I AM PROD
+spring:
+  datasource:
+    password: '{cipher}09f63af6410f6f5b5d257a33e5325a54c740576750011165df68e7eaba668116'
+    url: jdbc:postgresql://database:5432/ostock_prod
+    username: postgres
