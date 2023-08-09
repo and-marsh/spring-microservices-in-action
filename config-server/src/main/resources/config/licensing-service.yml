@@ -35,11 +35,18 @@ management.health.circuitbreakers.enabled: true
 management.health.ratelimiters.enabled: true
 
 resilience4j.circuitbreaker:
-  configs:
-    default:
+  instances:
+    licenseService:
       registerHealthIndicator: true
-
-
+      ringBufferSizeInClosedState: 5
+      ringBufferSizeInHalfOpenState: 3
+      waitDurationInOpenState: 10s
+      failureRateThreshold: 50
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+        - java.util.concurrent.TimeoutException
+        - org.springframework.web.client.ResourceAccessException
 resilience4j.ratelimiter:
   configs:
     instances:
