@@ -6,6 +6,7 @@ import com.optimagrowth.license.model.Organization
 import com.optimagrowth.license.repository.LicenseRepository
 import com.optimagrowth.license.service.client.OrganizationFeignClient
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
+import kotlin.random.Random
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
@@ -41,8 +42,11 @@ class LicenseService(
         )
     }
 
-    fun getLicensesByOrganization(organizationId: String): List<License> =
-        licenseRepository.findByOrganizationId(organizationId)
+    @CircuitBreaker(name = "licenseService")
+    fun getLicensesByOrganization(organizationId: String): List<License> {
+        sleep()
+        return licenseRepository.findByOrganizationId(organizationId)
+    }
 
     fun createLicense(license: License): License {
         val newLicense = license.copy(licenseId = UUID.randomUUID().toString())
@@ -72,6 +76,22 @@ class LicenseService(
 
             else -> null
         }
+
+    private fun randomlyRunLong() {
+        val randomNum = Random.nextInt(3) + 1
+        if (randomNum == 3) {
+            sleep()
+        }
+    }
+
+    private fun sleep() {
+        try {
+            Thread.sleep(2000);
+            throw java.util.concurrent.TimeoutException();
+        } catch (e: InterruptedException) {
+            println(e.message);
+        }
+    }
 
     companion object {
 
