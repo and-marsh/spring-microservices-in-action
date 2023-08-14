@@ -38,8 +38,10 @@ resilience4j.circuitbreaker:
   instances:
     licenseService:
       registerHealthIndicator: true
-      ringBufferSizeInClosedState: 5
-      ringBufferSizeInHalfOpenState: 3
+      slidingWindowType: COUNT_BASED
+      slidingWindowSize: 5
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
       waitDurationInOpenState: 10s
       failureRateThreshold: 50
       recordExceptions:
@@ -47,6 +49,7 @@ resilience4j.circuitbreaker:
         - java.io.IOException
         - java.util.concurrent.TimeoutException
         - org.springframework.web.client.ResourceAccessException
+        - feign.FeignException.ServiceUnavailable
 resilience4j.ratelimiter:
   configs:
     instances:
