@@ -20,7 +20,7 @@ class LicenseService(
     @field:Autowired val config: ServiceConfig
 ) {
 
-    @CircuitBreaker(name = "licenseService")
+    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
     fun getLicense(licenseId: String, organizationId: String, clientType: String? = null): License {
         val license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId)
             ?: throw IllegalArgumentException(
@@ -79,12 +79,18 @@ class LicenseService(
             else -> null
         }
 
-    private fun randomlyRunLong() {
-        val randomNum = Random.nextInt(3) + 1
-        if (randomNum == 3) {
-            sleep()
-        }
-    }
+    @Suppress("unused")
+    private fun buildFallbackLicenseList(
+        licenseId: String,
+        organizationId: String,
+        clientType: String?,
+        t: Throwable
+    ): License =
+        License(
+            licenseId = "0000000-00-00000",
+            organizationId = organizationId,
+            productName = "Sorry no licensing information currently available"
+        )
 
     private fun simulateTimeout(): Nothing {
         try {
