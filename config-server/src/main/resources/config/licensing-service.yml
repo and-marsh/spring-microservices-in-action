@@ -32,7 +32,6 @@ spring:
     show-sql: true
 
 management.health.circuitbreakers.enabled: true
-management.health.ratelimiters.enabled: true
 
 resilience4j.circuitbreaker:
   instances:
@@ -50,7 +49,3 @@ resilience4j.circuitbreaker:
         - java.util.concurrent.TimeoutException
         - org.springframework.web.client.ResourceAccessException
         - feign.FeignException.ServiceUnavailable
-resilience4j.ratelimiter:
-  configs:
-    instances:
-      registerHealthIndicator: true
