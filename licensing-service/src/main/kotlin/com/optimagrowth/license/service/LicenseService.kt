@@ -5,12 +5,15 @@ import com.optimagrowth.license.model.License
 import com.optimagrowth.license.model.Organization
 import com.optimagrowth.license.repository.LicenseRepository
 import com.optimagrowth.license.service.client.OrganizationFeignClient
+import io.github.resilience4j.bulkhead.annotation.Bulkhead
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.Locale
 import java.util.UUID
+import java.util.concurrent.CompletableFuture
 
 @Service
 class LicenseService(
@@ -21,14 +24,13 @@ class LicenseService(
 ) {
 
     @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
-    fun getLicense(licenseId: String, organizationId: String, clientType: String? = null): License {
+    @Bulkhead(name = "bulkheadLicenseService", type = Bulkhead.Type.THREADPOOL)
+    @Async
+    fun getLicense(licenseId: String, organizationId: String, clientType: String? = null): CompletableFuture<License> {
+        println("Using thread: ${Thread.currentThread().id}")
         val license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId)
             ?: throw IllegalArgumentException(
-                messages.getMessage(
-                    "license.search.error.message",
-                    arrayOf(licenseId, organizationId),
-                    DEFAULT_LOCALE
-                )
+                messages.getMessage("license.search.error.message", arrayOf(licenseId, organizationId), DEFAULT_LOCALE)
             )
 
         val organization = clientType?.let { retrieveOrganizationInfo(organizationId, clientType) }
@@ -39,7 +41,7 @@ class LicenseService(
             contactName = organization?.contactName,
             contactPhone = organization?.contactPhone,
             contactEmail = organization?.contactEmail
-        )
+        ).let { license -> CompletableFuture.completedFuture(license) }
     }
 
     fun getLicensesByOrganization(organizationId: String): List<License> =
@@ -85,17 +87,22 @@ class LicenseService(
         organizationId: String,
         clientType: String?,
         t: Throwable
-    ): License =
-        License(
-            licenseId = "0000000-00-00000",
-            organizationId = organizationId,
-            productName = "Sorry no licensing information currently available"
+    ): CompletableFuture<License> {
+        println(t)
+        return CompletableFuture.completedFuture(
+            License(
+                licenseId = "0000000-00-00000",
+                organizationId = organizationId,
+                productName = "Sorry no licensing information currently available",
+                comment = t.message
+            )
         )
+    }
 
     private fun simulateTimeout(): Nothing {
         try {
             Thread.sleep(2000);
-            throw java.util.concurrent.TimeoutException();
+            throw java.util.concurrent.TimeoutException("Timeout");
         } catch (e: InterruptedException) {
             println(e.message);
             throw e

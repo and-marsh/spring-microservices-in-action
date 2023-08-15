@@ -24,7 +24,7 @@ class LicenseController(@field:Autowired private val licenseService: LicenseServ
         @PathVariable("organizationId") organizationId: String,
         @PathVariable("licenseId") licenseId: String
     ): ResponseEntity<License> {
-        val license = licenseService.getLicense(licenseId, organizationId)
+        val license = licenseService.getLicense(licenseId, organizationId).get()
         license.add(
             linkTo(methodOn(LicenseController::class.java).getLicense(organizationId, licenseId)).withSelfRel(),
             linkTo(methodOn(LicenseController::class.java).createLicense(license)).withRel("createLicense"),
@@ -41,7 +41,7 @@ class LicenseController(@field:Autowired private val licenseService: LicenseServ
         @PathVariable("licenseId") licenseId: String,
         @PathVariable("clientType") clientType: String
     ): ResponseEntity<License> =
-        ResponseEntity.ok(licenseService.getLicense(licenseId, organizationId, clientType))
+        ResponseEntity.ok(licenseService.getLicense(licenseId, organizationId, clientType).get())
 
     @PutMapping
     fun updateLicense(@RequestBody request: License): ResponseEntity<License> =

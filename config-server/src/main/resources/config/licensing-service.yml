@@ -49,3 +49,12 @@ resilience4j.circuitbreaker:
         - java.util.concurrent.TimeoutException
         - org.springframework.web.client.ResourceAccessException
         - feign.FeignException.ServiceUnavailable
+        - io.github.resilience4j.bulkhead.BulkheadFullException
+
+resilience4j.thread-pool-bulkhead:
+  instances:
+    bulkheadLicenseService:
+      maxThreadPoolSize: 1
+      coreThreadPoolSize: 1
+      queueCapacity: 1
+      keepAliveDuration: 20ms
