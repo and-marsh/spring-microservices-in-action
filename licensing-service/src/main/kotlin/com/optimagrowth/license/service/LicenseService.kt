@@ -7,6 +7,7 @@ import com.optimagrowth.license.repository.LicenseRepository
 import com.optimagrowth.license.service.client.OrganizationFeignClient
 import io.github.resilience4j.bulkhead.annotation.Bulkhead
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
+import io.github.resilience4j.retry.annotation.Retry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.scheduling.annotation.Async
@@ -24,6 +25,7 @@ class LicenseService(
 ) {
 
     @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
+    @Retry(name = "retryLicenseService")
     @Bulkhead(name = "bulkheadLicenseService", type = Bulkhead.Type.THREADPOOL)
     @Async
     fun getLicense(licenseId: String, organizationId: String, clientType: String? = null): CompletableFuture<License> {
