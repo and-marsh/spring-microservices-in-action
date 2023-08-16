@@ -10,7 +10,6 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import io.github.resilience4j.retry.annotation.Retry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.Locale
 import java.util.UUID
@@ -24,10 +23,9 @@ class LicenseService(
     @field:Autowired val config: ServiceConfig
 ) {
 
-    @CircuitBreaker(name = "licenseService", fallbackMethod = "buildFallbackLicenseList")
-    @Retry(name = "retryLicenseService")
+    @Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
     @Bulkhead(name = "bulkheadLicenseService", type = Bulkhead.Type.THREADPOOL)
-    @Async
+    @CircuitBreaker(name = "licenseService")
     fun getLicense(licenseId: String, organizationId: String, clientType: String? = null): CompletableFuture<License> {
         println("Using thread: ${Thread.currentThread().id}")
         val license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId)
