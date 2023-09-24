@@ -5,9 +5,12 @@ import com.optimagrowth.license.model.License
 import com.optimagrowth.license.model.Organization
 import com.optimagrowth.license.repository.LicenseRepository
 import com.optimagrowth.license.service.client.OrganizationFeignClient
+import com.optimagrowth.license.utils.UserContextHolder
 import io.github.resilience4j.bulkhead.annotation.Bulkhead
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import io.github.resilience4j.retry.annotation.Retry
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.MessageSource
 import org.springframework.stereotype.Service
@@ -23,15 +26,19 @@ class LicenseService(
     @field:Autowired val config: ServiceConfig
 ) {
 
+    private val logger: Logger = LoggerFactory.getLogger(LicenseService::class.java)
+
     @Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
-    @Bulkhead(name = "bulkheadLicenseService", type = Bulkhead.Type.THREADPOOL)
+//    @Bulkhead(name = "bulkheadLicenseService", type = Bulkhead.Type.THREADPOOL)
     @CircuitBreaker(name = "licenseService")
     fun getLicense(licenseId: String, organizationId: String, clientType: String? = null): CompletableFuture<License> {
-        println("Using thread: ${Thread.currentThread().id}")
         val license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId)
             ?: throw IllegalArgumentException(
                 messages.getMessage("license.search.error.message", arrayOf(licenseId, organizationId), DEFAULT_LOCALE)
             )
+
+        println("Using thread: ${Thread.currentThread().id}")
+        logger.debug("getLicense Correlation id: {}", UserContextHolder.context?.correlationId)
 
         val organization = clientType?.let { retrieveOrganizationInfo(organizationId, clientType) }
 

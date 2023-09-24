@@ -2,6 +2,8 @@ package com.optimagrowth.license.controller
 
 import com.optimagrowth.license.model.License
 import com.optimagrowth.license.service.LicenseService
+import com.optimagrowth.license.utils.UserContextHolder
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*
 import org.springframework.http.ResponseEntity
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping(value = ["v1/organization/{organizationId}/license"])
 class LicenseController(@field:Autowired private val licenseService: LicenseService) {
 
+    private val logger = LoggerFactory.getLogger(LicenseController::class.java)
+
     @GetMapping(value = ["/{licenseId}"])
     fun getLicense(
         @PathVariable("organizationId") organizationId: String,
@@ -31,6 +35,9 @@ class LicenseController(@field:Autowired private val licenseService: LicenseServ
             linkTo(methodOn(LicenseController::class.java).updateLicense(license)).withRel("updateLicense"),
             linkTo(methodOn(LicenseController::class.java).deleteLicense(licenseId)).withRel("deleteLicense")
         )
+
+        println("Using thread: ${Thread.currentThread().id}")
+        logger.debug("LicenseServiceController Correlation id: {}", UserContextHolder.context?.correlationId)
 
         return ResponseEntity.ok(license)
     }

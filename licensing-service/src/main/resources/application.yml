@@ -7,3 +7,8 @@ spring:
     import: configserver:http://config-server:8071
 server:
   port: 8080
+
+logging:
+  level:
+    org.springframework.web: WARN
+    com.optimagrowth: DEBUG
