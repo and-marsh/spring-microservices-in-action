@@ -16,3 +16,5 @@ management:
         include: '*'
 server:
   port: 8070
+
+cloud.loadbalancer.ribbon.enabled: false

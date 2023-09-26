@@ -5,7 +5,3 @@ spring:
     active: dev
   config:
     import: configserver:http://config-server:8071
-server:
-  port: 8081
-
-

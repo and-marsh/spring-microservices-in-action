@@ -3,7 +3,3 @@ spring:
     name: eureka-server
   config:
     import: configserver:http://config-server:8071
-  cloud:
-    loadbalancer:
-      ribbon:
-        enabled: false
