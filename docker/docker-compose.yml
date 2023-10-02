@@ -65,6 +65,23 @@ services:
         aliases:
           - "eureka-server"
 
+  gateway-server:
+    image: ostock/gateway-server:0.0.1-SNAPSHOT
+    build: ./gateway-server
+    ports:
+      - "8072:8072"
+    depends_on:
+      database:
+        condition: service_healthy
+      config-server:
+        condition: service_started
+      eureka-server:
+        condition: service_started
+    networks:
+      backend:
+        aliases:
+          - "gateway-server"
+
   licensing-service:
     image: andmarsh/licensing-service:0.0.1-SNAPSHOT
     build: ./licensing-service
