@@ -1,7 +1,6 @@
-package com.optimagrowth.license.utils
+package com.optimagrowth.organization.utils
 
 import org.springframework.stereotype.Component
-import java.util.function.Supplier
 
 @Component
 data class UserContext(

@@ -66,7 +66,7 @@ services:
           - "eureka-server"
 
   gateway-server:
-    image: ostock/gateway-server:0.0.1-SNAPSHOT
+    image: andmarsh/gateway-server:0.0.1-SNAPSHOT
     build: ./gateway-server
     ports:
       - "8072:8072"

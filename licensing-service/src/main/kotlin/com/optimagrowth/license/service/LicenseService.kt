@@ -29,7 +29,7 @@ class LicenseService(
     private val logger: Logger = LoggerFactory.getLogger(LicenseService::class.java)
 
     @Retry(name = "retryLicenseService", fallbackMethod = "buildFallbackLicenseList")
-//    @Bulkhead(name = "bulkheadLicenseService", type = Bulkhead.Type.THREADPOOL)
+    @Bulkhead(name = "bulkheadLicenseService", type = Bulkhead.Type.SEMAPHORE)
     @CircuitBreaker(name = "licenseService")
     fun getLicense(licenseId: String, organizationId: String, clientType: String? = null): CompletableFuture<License> {
         val license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId)
