@@ -91,7 +91,7 @@ services:
       config-server:
         condition: service_started
     ports:
-      - "8080:8080"
+      - "8180:8080"
     networks:
       backend:
         aliases:
@@ -111,6 +111,30 @@ services:
       backend:
         aliases:
           - "organization-service"
+
+  keycloak:
+    # image: jboss/keycloak
+    build: https://github.com/keycloak/keycloak.git#22.0.4:quarkus/container
+    restart: always
+    environment:
+      # KEYCLOAK_VERSION: 22.0.4
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+        - ./realm-export.json:/opt/jboss/keycloak/realm-export.json
+    command:
+      # - "-b 0.0.0.0"
+      # - "-Dkeycloak.import=/opt/jboss/keycloak/realm-export.json"
+      # - "-Dkeycloak.profile.feature.scripts=enabled"
+      # - "-Dkeycloak.profile.feature.upload_scripts=enabled"
+      - "start-dev"
+      - "--health-enabled=true"
+    ports:
+      - "8080:8080"
+    networks:
+      backend:
+        aliases:
+          - "keycloak-server"
 
 networks:
   backend:
