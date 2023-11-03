@@ -113,21 +113,22 @@ services:
           - "organization-service"
 
   keycloak:
-    # image: jboss/keycloak
+    image: andmarsh/keycloak
     build: https://github.com/keycloak/keycloak.git#22.0.4:quarkus/container
     restart: always
     environment:
       # KEYCLOAK_VERSION: 22.0.4
+      KEYCLOAK_IMPORT: "/opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.profile.feature.upload_scripts=enabled"
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     volumes:
-        - ./realm-export.json:/opt/jboss/keycloak/realm-export.json
+        - ./keycloak:/opt/keycloak/data/import
     command:
       # - "-b 0.0.0.0"
       # - "-Dkeycloak.import=/opt/jboss/keycloak/realm-export.json"
       # - "-Dkeycloak.profile.feature.scripts=enabled"
-      # - "-Dkeycloak.profile.feature.upload_scripts=enabled"
       - "start-dev"
+      - "--import-realm"
       - "--health-enabled=true"
     ports:
       - "8080:8080"
