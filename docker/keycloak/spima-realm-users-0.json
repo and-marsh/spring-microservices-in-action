@@ -1,0 +1,71 @@
+{
+  "realm" : "spima-realm",
+  "users" : [ {
+    "id" : "159d0590-740e-49be-9a2a-738cc417c876",
+    "createdTimestamp" : 1699522011761,
+    "username" : "illary.huaylupo",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "",
+    "lastName" : "",
+    "credentials" : [ {
+      "id" : "a1474a3f-2ef1-4d32-8498-9707cdb2689e",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1699522042393,
+      "secretData" : "{\"value\":\"SwK24bm6vUu2pwUOONuQk3d8oN9Ot4hj2MhiPqsoyBQ=\",\"salt\":\"w55PntKLrFk4QFdwB8RE8w==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-spima-realm" ],
+    "clientRoles" : {
+      "ostock" : [ "ADMIN" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "bfbe503b-b2dd-47b4-86c0-87678386931d",
+    "createdTimestamp" : 1699637132289,
+    "username" : "john.carnell",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "",
+    "lastName" : "",
+    "credentials" : [ {
+      "id" : "d362b812-5c59-473f-8bcf-9d551e8d1514",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1699637163497,
+      "secretData" : "{\"value\":\"fX6xt9XhtHqUw1FmnGLoJnrAGtAa6D1kddFQuh0abJ8=\",\"salt\":\"RjQICexbrvTMqbtmOB2Qpw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-spima-realm" ],
+    "clientRoles" : {
+      "ostock" : [ "USER" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "5583e892-695c-4b6e-a5c8-eba3cb4d304c",
+    "createdTimestamp" : 1699002202276,
+    "username" : "service-account-ostock",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "serviceAccountClientId" : "ostock",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-spima-realm" ],
+    "clientRoles" : {
+      "ostock" : [ "uma_protection" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}

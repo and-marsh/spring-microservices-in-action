@@ -124,9 +124,6 @@ services:
     volumes:
         - ./keycloak:/opt/keycloak/data/import
     command:
-      # - "-b 0.0.0.0"
-      # - "-Dkeycloak.import=/opt/jboss/keycloak/realm-export.json"
-      # - "-Dkeycloak.profile.feature.scripts=enabled"
       - "start-dev"
       - "--import-realm"
       - "--health-enabled=true"
