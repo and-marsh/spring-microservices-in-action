@@ -105,6 +105,10 @@ services:
         condition: service_healthy
       config-server:
         condition: service_started
+      keycloak:
+        condition: service_started
+      eureka-server:
+        condition: service_started
     ports:
       - "8081:8081"
     networks:

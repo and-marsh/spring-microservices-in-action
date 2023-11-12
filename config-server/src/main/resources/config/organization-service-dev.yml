@@ -14,5 +14,6 @@ spring:
 
 logging:
   level:
+    root: DEBUG
     org.springframework.web: WARN
     com.optimagrowth: DEBUG

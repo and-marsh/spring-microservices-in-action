@@ -5,3 +5,22 @@ spring:
     active: dev
   config:
     import: configserver:http://config-server:8071
+
+com:
+  c4-soft:
+    springaddons:
+      oidc:
+        ops:
+          - iss: http://keycloak-server:8080/realms/spima-realm
+            username-claim: preferred_username
+            authorities:
+              - path: $.realm_access.roles
+              - path: $.resource_access.*.roles
+        resourceserver:
+#          cors:
+#            - path: /**
+#              allowed-origin-patterns: http://localhost:4200
+          permit-all:
+            - "/actuator/health/readiness"
+            - "/actuator/health/liveness"
+            - "/v3/api-docs/**"
